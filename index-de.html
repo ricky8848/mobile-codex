@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobile Codex · Bedienungsanleitung · v0.23.9g</title>
+<style>
+:root{--bg:#0d0d0d;--fg:#dfe0df;--card:#171717;--acc:#2563eb;--line:#2a2a2a;--mut:#8a8a8a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding:24px 18px 60px}
+.hero{text-align:center;padding:28px 0 18px;border-bottom:1px solid var(--line);margin-bottom:24px}
+.hero h1{font-size:30px;margin:0 0 6px}
+.hero .ver{color:var(--acc);font-weight:600}
+.hero p{color:var(--mut);margin:4px 0}
+h2{font-size:21px;margin:34px 0 12px;padding-left:10px;border-left:3px solid var(--acc)}
+h3{font-size:16px;margin:18px 0 8px;color:#cfcfcf}
+.badges{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.badge{display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid var(--line);border-radius:12px;background:var(--card);cursor:pointer;font-size:15px;transition:.15s;user-select:none}
+.badge:hover{border-color:var(--acc)}
+.badge.active{border-color:var(--acc);background:#1a2b45}
+.badge .ic{font-size:20px}
+.cmdbox{display:none;margin-top:16px}
+.cmdbox.show{display:block}
+pre{background:#000;border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:13.5px;color:#c8f7c5;line-height:1.5}
+code.inline{background:#222;padding:2px 6px;border-radius:5px;font-size:.9em;color:#f0c674}
+.note{background:#16233c;border:1px solid #24406e;border-radius:10px;padding:12px 14px;margin:12px 0;font-size:14px}
+.note.warn{background:#2a1e12;border-color:#6e4a24}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+.steps li{position:relative;padding:12px 12px 12px 46px;margin:10px 0;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:12px;top:12px;width:26px;height:26px;background:var(--acc);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.shot{margin:10px 0;text-align:center}
+.shot img{max-width:100%;border:1px solid var(--line);border-radius:12px}
+.shot .cap{color:var(--mut);font-size:13px;margin-top:6px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#1a1a1a}
+.langs{display:flex;gap:8px;justify-content:center;margin:10px 0}
+.langs a{color:var(--fg);text-decoration:none;border:1px solid var(--line);padding:6px 12px;border-radius:8px;font-size:13px}
+.langs a:hover{border-color:var(--acc)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}}
+.foot{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--mut);font-size:13px;text-align:center}
+.ok{color:#4ade80}.err{color:#f87171}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <h1>📱 Mobile Codex <span class="ver">v0.23.9g</span></h1>
+  <p>在手机上实时使用你的 Codex 桌面端 —— 双向同步 · 零安装 App</p>
+  <div class="langs">
+    <a href="index-zh.html">简体中文</a>
+    <a href="index-en.html">English</a>
+    <a href="index-ja.html">日本語</a>
+    <a href="index-de.html" style="border-color:var(--acc)">Deutsch</a>
+  </div>
+</div>
+
+<div class="note">
+<b>它是什么：</b>Mobile Codex（代号 8214）是一个<b>本地 Web 薄外壳</b>，复用你桌面 ChatGPT.app 的 codex-cli 与 <code class="inline">~/.codex</code> 数据，让手机/浏览器与桌面端<b>双向实时同步</b>（逐 token 显示思考与输出，发送消息与桌面一致）。<b>不是独立 App、不注入宿主、不改动宿主</b>。
+</div>
+
+<h2>① 选择你的系统安装</h2>
+<p>点击下方系统徽标，显示对应的一键安装命令（命令按系统自动切换）：</p>
+<div class="badges" id="badges"></div>
+<div id="cmdHost"></div>
+
+<h2>② 安装前准备（所有系统通用）</h2>
+<ol class="steps">
+  <li><b>安装桌面宿主 ChatGPT.app</b>（必需）— 8214 复用它的 codex-cli 与数据。<span class="err">没有宿主，8214 无数据源。</span></li>
+  <li><b>安装 Node.js ≥ 18</b> — 8214 后端运行时。<span class="ok">macOS 可用 Homebrew。</span></li>
+  <li><b>登录宿主一次</b> — 在桌面 ChatGPT.app 完成登录，8214 共享同一份凭据（不单独存密钥）。</li>
+</ol>
+
+<h2>③ 三步安装指引</h2>
+<ol class="steps">
+  <li><b>克隆代码</b><pre>git clone https://github.com/ricky8848/codex-web
+cd codex-web</pre></li>
+  <li><b>安装依赖</b><pre>npm install</pre></li>
+  <li><b>启动 8214 后端 + 手机隧道</b><pre>node src/server/main.js            # 8214 监听 127.0.0.1:8214
+# 手机访问需公网：起一条到 8214 的隧道（如 Cloudflare Tunnel）
+# 手机浏览器打开隧道地址即可</pre></li>
+</ol>
+<div class="note">安装完成后，手机浏览器打开你的隧道地址 → 看到与桌面<b>完全一致</b>的 Codex 界面（对话/思考/命令审批/图片/文件）。</div>
+
+<h3>安装验证</h3>
+<div class="grid2">
+  <div><pre>curl http://127.0.0.1:8214/health</pre><span class="ok">✓ 返回 HTML 即后端正常</span></div>
+  <div><pre>curl http://127.0.0.1:8216/health</pre><span class="ok">✓ Hub 同步中间层正常</span></div>
+</div>
+
+<h2>④ 手机使用（图文指引）</h2>
+<ol class="steps">
+  <li><b>手机浏览器打开隧道地址</b>，看到 Codex 界面（与桌面一致）。<div class="shot"><img src="shots/phone-open.png" alt="手机打开"><div class="cap">图1 · 手机浏览器打开后的主界面</div></div></li>
+  <li><b>发送消息</b>，逐 token 看到思考过程与输出（和桌面逐字同步）。<div class="shot"><img src="shots/phone-stream.png" alt="流式"><div class="cap">图2 · 逐字流式显示思考与回答</div></div></li>
+  <li><b>审批/图片/文件</b>：宿主触发的命令审批会以卡片弹出；发送图片可回显。<div class="shot"><img src="shots/phone-approval.png" alt="审批"><div class="cap">图3 · 命令审批卡片（点击后引导到桌面宿主完成，合规不代管）</div></div></li>
+</ol>
+
+<h2>⑤ 系统要求与徽标说明</h2>
+<table>
+<tr><th>组件</th><th>系统</th><th>说明</th></tr>
+<tr><td>8214 后端</td><td>macOS / Linux</td><td>Node ≥18，回环 127.0.0.1:8214</td></tr>
+<tr><td>Hub 中间层</td><td>macOS / Linux</td><td>8216，文件底座增量监听</td></tr>
+<tr><td>手机/浏览器</td><td>Android / iOS / 桌面</td><td>纯 Web，经隧道访问，零安装</td></tr>
+<tr><td>宿主</td><td>macOS (ChatGPT.app)</td><td>数据源，需已安装并登录</td></tr>
+</table>
+
+<h2>⑥ 常见问题</h2>
+<table>
+<tr><th>问题</th><th>解决</th></tr>
+<tr><td>手机打不开</td><td>检查隧道是否运行；8214 只监听回环，必须经隧道</td></tr>
+<tr><td>发送没反应</td><td>宿主忙碌时排队（合规单写路径）；看「已排队」状态条</td></tr>
+<tr><td>刷新丢消息</td><td>心跳兜底会自动重建；稍等或重新进入对话</td></tr>
+<tr><td>审批点不了</td><td>8214 不代管宿主 UI，审批请在桌面宿主完成</td></tr>
+</table>
+
+<h2>⑦ 合规与安全</h2>
+<div class="note warn">
+· <b>零侵入</b>：不注入、不控制、不重启宿主进程。<br>
+· <b>凭据</b>：不读取/不外发 <code class="inline">~/.codex/auth.json</code>，仅你粘贴落盘。<br>
+· <b>暴露面</b>：默认仅 127.0.0.1 回环；公网隧道由你自行管理，对话内容注意脱敏。<br>
+· OpenAI / ChatGPT / Codex 为 OpenAI, Inc. 商标，本文名义引用，不主张所有权或背书。
+</div>
+
+<div class="foot">
+Mobile Codex v0.23.9g · 作者 <b>ricky8848</b> (ORCID 0009-0002-6382-0711)<br>
+代码 <a href="https://github.com/ricky8848" style="color:var(--acc)">github.com/ricky8848</a> · 2026
+</div>
+
+</div>
+<script>
+var SYS=[
+ {ic:"🍎",name:"macOS",cmd:"git clone https://github.com/ricky8848/codex-web && cd codex-web\nbrew install node   # 若未装\nnpm install\nnode src/server/main.js   # 8214 监听 127.0.0.1:8214"},
+ {ic:"🐧",name:"Linux",cmd:"git clone https://github.com/ricky8848/codex-web && cd codex-web\n# Node>=18: curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash && sudo apt install node\nnpm install\nnode src/server/main.js"},
+ {ic:"🪟",name:"Windows",cmd:"git clone https://github.com/ricky8848/codex-web && cd codex-web\n# Node>=18: 从 nodejs.org 安装\nnpm install\nnode src\\server\\main.js"},
+ {ic:"🤖",name:"Android",cmd:"# 手机零安装：浏览器打开你的隧道地址\n# （8214 需先在你的电脑/Mac 上运行 + 起隧道）"},
+ {ic:"🍏",name:"iOS / iPhone",cmd:"# 手机零安装：Safari 打开你的隧道地址\n# （8214 需先在你的电脑/Mac 上运行 + 起隧道）"},
+ {ic:"🖥️",name:"桌面浏览器",cmd:"# 电脑浏览器直接访问\nhttp://127.0.0.1:8214/"}
+];
+var bd=document.getElementById('badges'),ch=document.getElementById('cmdHost');
+SYS.forEach(function(s,i){
+ var b=document.createElement('div');b.className='badge';b.innerHTML='<span class="ic">'+s.ic+'</span>'+s.name;
+ b.onclick=function(){
+   document.querySelectorAll('.badge').forEach(function(x){x.classList.remove('active')});
+   b.classList.add('active');
+   ch.innerHTML='<pre>'+s.cmd.replace(/</g,'&lt;')+'</pre>';
+ };
+ bd.appendChild(b);
+});
+</script>
+</body>
+</html>
