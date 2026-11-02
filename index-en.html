@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobile Codex · User Manual · v0.23.9g</title>
+<style>
+:root{--bg:#0d0d0d;--fg:#dfe0df;--card:#171717;--acc:#2563eb;--line:#2a2a2a;--mut:#8a8a8a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding:24px 18px 60px}
+.hero{text-align:center;padding:28px 0 18px;border-bottom:1px solid var(--line);margin-bottom:24px}
+.hero h1{font-size:30px;margin:0 0 6px}
+.hero .ver{color:var(--acc);font-weight:600}
+.hero p{color:var(--mut);margin:4px 0}
+h2{font-size:21px;margin:34px 0 12px;padding-left:10px;border-left:3px solid var(--acc)}
+h3{font-size:16px;margin:18px 0 8px;color:#cfcfcf}
+.badges{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.badge{display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid var(--line);border-radius:12px;background:var(--card);cursor:pointer;font-size:15px;transition:.15s;user-select:none}
+.badge:hover{border-color:var(--acc)}
+.badge.active{border-color:var(--acc);background:#1a2b45}
+.badge .ic{font-size:20px}
+.cmdbox{display:none;margin-top:16px}
+.cmdbox.show{display:block}
+pre{background:#000;border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:13.5px;color:#c8f7c5;line-height:1.5}
+code.inline{background:#222;padding:2px 6px;border-radius:5px;font-size:.9em;color:#f0c674}
+.note{background:#16233c;border:1px solid #24406e;border-radius:10px;padding:12px 14px;margin:12px 0;font-size:14px}
+.note.warn{background:#2a1e12;border-color:#6e4a24}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+.steps li{position:relative;padding:12px 12px 12px 46px;margin:10px 0;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:12px;top:12px;width:26px;height:26px;background:var(--acc);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.shot{margin:10px 0;text-align:center}
+.shot img{max-width:100%;border:1px solid var(--line);border-radius:12px}
+.shot .cap{color:var(--mut);font-size:13px;margin-top:6px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#1a1a1a}
+.langs{display:flex;gap:8px;justify-content:center;margin:10px 0}
+.langs a{color:var(--fg);text-decoration:none;border:1px solid var(--line);padding:6px 12px;border-radius:8px;font-size:13px}
+.langs a:hover{border-color:var(--acc)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}}
+.foot{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--mut);font-size:13px;text-align:center}
+.ok{color:#4ade80}.err{color:#f87171}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <h1>📱 Mobile Codex <span class="ver">v0.23.9g</span></h1>
+  <p>Use your Codex desktop in real time on your phone — bidirectional sync · zero app install</p>
+  <div class="langs">
+    <a href="index-zh.html">简体中文</a>
+    <a href="index-en.html" style="border-color:var(--acc)">English</a>
+    <a href="index-ja.html">日本語</a>
+    <a href="index-de.html">Deutsch</a>
+  </div>
+</div>
+
+<div class="note">
+<b>What it is:</b> Mobile Codex (codename 8214) is a <b>local thin web shell</b> that reuses your desktop ChatGPT.app's codex-cli and <code class="inline">~/.codex</code> data, giving your phone/browser <b>bidirectional real-time sync</b> with desktop (per-token reasoning & output, identical sends). <b>Not a standalone app, no host injection, no host modification.</b>
+</div>
+
+<h2>① Install for your system</h2>
+<p>Click a system badge below to show its one-click install command (auto-switches by OS):</p>
+<div class="badges" id="badges"></div>
+<div id="cmdHost"></div>
+
+<h2>② Prerequisites (all systems)</h2>
+<ol class="steps">
+  <li><b>Install the desktop host ChatGPT.app</b> (required) — 8214 reuses its codex-cli and data. <span class="err">No host, no data source.</span></li>
+  <li><b>Install Node.js ≥ 18</b> — the 8214 backend runtime. <span class="ok">Homebrew on macOS.</span></li>
+  <li><b>Log in to the host once</b> — sign in on desktop ChatGPT.app; 8214 shares the same credentials (no separate key storage).</li>
+</ol>
+
+<h2>③ Three-step installation</h2>
+<ol class="steps">
+  <li><b>Clone the code</b><pre>git clone https://github.com/ricky8848/codex-web
+cd codex-web</pre></li>
+  <li><b>Install dependencies</b><pre>npm install</pre></li>
+  <li><b>Start the 8214 backend + phone tunnel</b><pre>node src/server/main.js            # 8214 listens on 127.0.0.1:8214
+# Phone needs public access: stand up a tunnel to 8214 (e.g. Cloudflare Tunnel)
+# open the tunnel URL in the phone browser</pre></li>
+</ol>
+<div class="note">After install, open your tunnel URL in the phone browser → you see a Codex UI <b>identical to desktop</b> (chats / reasoning / command approval / images / files).</div>
+
+<h3>Verify installation</h3>
+<div class="grid2">
+  <div><pre>curl http://127.0.0.1:8214/health</pre><span class="ok">✓ HTML returned = backend OK</span></div>
+  <div><pre>curl http://127.0.0.1:8216/health</pre><span class="ok">✓ Hub sync middleware OK</span></div>
+</div>
+
+<h2>④ Using on your phone (guided)</h2>
+<ol class="steps">
+  <li><b>Open your tunnel URL in the phone browser</b> — you see the Codex UI (identical to desktop).<div class="shot"><img src="shots/phone-open.png" alt="手机打开"><div class="cap">Fig 1 · Main screen after opening in phone browser</div></div></li>
+  <li><b>Send a message</b> — watch reasoning and output stream per-token (word-for-word with desktop).<div class="shot"><img src="shots/phone-stream.png" alt="流式"><div class="cap">Fig 2 · Per-token streaming of reasoning & reply</div></div></li>
+  <li><b>Approval / images / files</b>: host-triggered command approvals pop up as cards; sent images render back.<div class="shot"><img src="shots/phone-approval.png" alt="审批"><div class="cap">Fig 3 · Command approval card (click routes to desktop host; compliant, no UI control)</div></div></li>
+</ol>
+
+<h2>⑤ System requirements & badges</h2>
+<table>
+<tr><th>Component</th><th>System</th><th>Notes</th></tr>
+<tr><td>8214 backend</td><td>macOS / Linux</td><td>Node ≥18, loopback 127.0.0.1:8214</td></tr>
+<tr><td>Hub middleware</td><td>macOS / Linux</td><td>8216, file-base incremental tailing</td></tr>
+<tr><td>Phone / browser</td><td>Android / iOS / desktop</td><td>Pure web via tunnel, zero install</td></tr>
+<tr><td>Host</td><td>macOS (ChatGPT.app)</td><td>Data source, must be installed & signed in</td></tr>
+</table>
+
+<h2>⑥ FAQ</h2>
+<table>
+<tr><th>Problem</th><th>Fix</th></tr>
+<tr><td>Phone can't open</td><td>Check the tunnel is running; 8214 binds loopback only, must go via tunnel</td></tr>
+<tr><td>Send does nothing</td><td>Host busy = queued (compliant single write path); see the "queued" status bar</td></tr>
+<tr><td>Messages lost on refresh</td><td>Heartbeat backstop rebuilds; wait or re-enter the chat</td></tr>
+<tr><td>Approval can't be clicked</td><td>8214 doesn't control host UI; complete approval in the desktop host</td></tr>
+</table>
+
+<h2>⑦ Compliance & security</h2>
+<div class="note warn">
+· <b>Zero intrusion</b>: no injection, no control, no restart of the host process.<br>
+· <b>Credentials</b>: <code class="inline">~/.codex/auth.json</code> is never read or exfiltrated; only landed when you paste.<br>
+· <b>Exposure</b>: loopback (127.0.0.1) by default; you manage any public tunnel — redact conversation content.<br>
+· OpenAI / ChatGPT / Codex are trademarks of OpenAI, Inc.; referenced nominatively, no ownership or endorsement claimed.
+</div>
+
+<div class="foot">
+Mobile Codex v0.23.9g · Author <b>ricky8848</b> (ORCID 0009-0002-6382-0711)<br>
+Code <a href="https://github.com/ricky8848" style="color:var(--acc)">github.com/ricky8848</a> · 2026
+</div>
+
+</div>
+<script>
+var SYS=[
+ {ic:"🍎",name:"macOS",cmd:"git clone https://github.com/ricky8848/codex-web && cd codex-web\nbrew install node   # if not installed\nnpm install\nnode src/server/main.js   # 8214 listens on 127.0.0.1:8214"},
+ {ic:"🐧",name:"Linux",cmd:"git clone https://github.com/ricky8848/codex-web && cd codex-web\n# Node>=18: curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash && sudo apt install node\nnpm install\nnode src/server/main.js"},
+ {ic:"🪟",name:"Windows",cmd:"git clone https://github.com/ricky8848/codex-web && cd codex-web\n# Node>=18: 从 nodejs.org 安装\nnpm install\nnode src\\server\\main.js"},
+ {ic:"🤖",name:"Android",cmd:"# 手机零安装：浏览器打开你的隧道地址\n# （8214 需先在你的电脑/Mac 上运行 + 起隧道）"},
+ {ic:"🍏",name:"iOS / iPhone",cmd:"# 手机零安装：Safari 打开你的隧道地址\n# （8214 需先在你的电脑/Mac 上运行 + 起隧道）"},
+ {ic:"🖥️",name:"桌面浏览器",cmd:"# Access directly in your desktop browser\nhttp://127.0.0.1:8214/"}
+];
+var bd=document.getElementById('badges'),ch=document.getElementById('cmdHost');
+SYS.forEach(function(s,i){
+ var b=document.createElement('div');b.className='badge';b.innerHTML='<span class="ic">'+s.ic+'</span>'+s.name;
+ b.onclick=function(){
+   document.querySelectorAll('.badge').forEach(function(x){x.classList.remove('active')});
+   b.classList.add('active');
+   ch.innerHTML='<pre>'+s.cmd.replace(/</g,'&lt;')+'</pre>';
+ };
+ bd.appendChild(b);
+});
+</script>
+</body>
+</html>
